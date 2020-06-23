@@ -1,12 +1,9 @@
 import React from 'react';
 import './Navigation.css';
-
-function myFunction() {
-	document.getElementById("myDropdown").classList.toggle("show");
-}
+import { DropdownButton, Dropdown } from 'react-bootstrap';
 
 const Navigation = ({handleGenerateMaze,visualizeDijkstra,handleClearMaze,handleClearPath}) => {
-	
+
 	return (
 		<div className = 'content'>
 			<div className='ph3'>
@@ -18,13 +15,12 @@ const Navigation = ({handleGenerateMaze,visualizeDijkstra,handleClearMaze,handle
 			<div className='ph3'>
 				<button className ='br3 grow pa3 b pointer custom' onClick = {handleClearMaze}> CLEAR MAZE </button>
 			</div>
-			<div className='ph3 dropdown'>
-				<button className ='dropbtn br3 grow pa3 b pointer custom'> ALGORITHM: BFS </button>
-				<div class="dropdown-content" id="myDropdown" onClick = myFunction >
-    				<a href="#"> BFS </a>
-    				<a href="#"> DFS </a>
-    				<a href="#"> Dijkstra </a>
-  				</div>
+			<div className='ph1'>
+				<DropdownButton id="dropdown-basic-button" title=" Algorithm: BFS " bsPrefix = "br3 grow pa3 b pointer custom">
+  					<Dropdown.Item href="#"> BFS </Dropdown.Item>
+  					<Dropdown.Item href="#"> DFS </Dropdown.Item>
+  					<Dropdown.Item href="#"> Dijkstra </Dropdown.Item>
+				</DropdownButton>
 			</div>
 			<div className='ph3'>
 				<button className ='br3 grow pa3 b pointer custom' onClick = {visualizeDijkstra}> VISUALIZE </button>

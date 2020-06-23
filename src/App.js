@@ -203,7 +203,7 @@ class App extends Component {
           {
             grid.map((row,rowIdx) => {
               return(
-                <div key={rowIdx} className='mrgn'>
+                <div className= "set-margin" key={rowIdx} >
                   {
                     row.map((node,nodeIdx) => {
                       const {row,col,isStart,isFinish,isWall} = node;
