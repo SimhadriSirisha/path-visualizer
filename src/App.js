@@ -3,6 +3,15 @@ import './App.css';
 import Node from './Node/Node';
 import Navigation from './Navigation/Navigation';
 import {dijkstra,getNodesInShortestPathOrder} from './Algorithms/dijkstra';
+import {bfs,getNodesInShortestPathOrderBfs} from './Algorithms/bfs';
+
+
+    // isStart
+    // isFinish
+    // isWall(bool)
+    // isVisited(bool)
+    // distance
+    // prevNode
 
 
 const START_NODE_ROW = 8;
@@ -53,7 +62,8 @@ class App extends Component {
     this.state = {
       grid: [],
       mouseIsPressed: false,
-      visitedNodesInOrder: []
+      visitedNodesInOrder: [],
+      choice: 'BFS'
     }
   }
 
@@ -62,6 +72,14 @@ class App extends Component {
     this.setState({grid});
   }
 
+
+  //loads the choice
+  loadChoice = (choice) => {
+    this.setState({choice});
+  }
+
+
+  //handlers for mouse events
   handleMouseDown(row, col) {
     const newGrid = getNewGridWithWallToggled(this.state.grid, row, col);
     this.setState({grid: newGrid, mouseIsPressed: true});
@@ -76,7 +94,6 @@ class App extends Component {
   handleMouseUp() {
     this.setState({mouseIsPressed: false});
   }
-
 
 
    // function to clear path
@@ -151,8 +168,11 @@ class App extends Component {
   }
 
 
-  //Dijkstra algorithm (animation + implementation)
-  animateDijkstra(visitedNodesInOrder, nodesInShortestPathOrder) {
+  //visual animation 
+  animateAlgorithm(nodesInShortestPathOrder) {
+    const {visitedNodesInOrder} = this.state;
+    console.log("in visual animation Algorithm");
+    console.log(visitedNodesInOrder);
     for (let i = 0; i <= visitedNodesInOrder.length; i++) {
       if (i === visitedNodesInOrder.length) {
         setTimeout(() => {
@@ -179,14 +199,43 @@ class App extends Component {
     }
   }
 
+
+  //Dijkstra Algorithm
   visualizeDijkstra = () =>{
     const {grid} = this.state;
+    console.log("in visual dijkstra Algorithm");
+    this.handleClearPath();
     const startNode = grid[START_NODE_ROW][START_NODE_COL];
     const finishNode = grid[FINISH_NODE_ROW][FINISH_NODE_COL];
     const visitedNodesInOrder = dijkstra(grid, startNode, finishNode);
     const nodesInShortestPathOrder = getNodesInShortestPathOrder(finishNode);
     this.setState({visitedNodesInOrder});
-    this.animateDijkstra(visitedNodesInOrder, nodesInShortestPathOrder);
+    this.animateAlgorithm(nodesInShortestPathOrder);
+  }
+
+
+  // Bfs Algorithm
+  visualizeBfs = () => {
+    const {grid} = this.state;
+    console.log("in visual bfs Algorithm");
+    this.handleClearPath();
+    const startNode = grid[START_NODE_ROW][START_NODE_COL];
+    const finishNode = grid[FINISH_NODE_ROW][FINISH_NODE_COL];
+    const visitedNodesInOrder = bfs(grid, startNode, finishNode);
+    console.log("before setting state:" , visitedNodesInOrder);
+    const nodesInShortestPathOrder = getNodesInShortestPathOrderBfs(finishNode);
+    this.setState({visitedNodesInOrder});
+    console.log("before setting state:" , this.state.visitedNodesInOrder);
+    this.animateAlgorithm(nodesInShortestPathOrder);
+  }
+
+  // visualize algorithm 
+  visualizeAlgorithm = () => {
+    const {choice} = this.state;
+    if(choice === 'BFS')
+      this.visualizeBfs();
+    else if(choice === 'Dijkstra')
+      this.visualizeDijkstra();
   }
 
   render(){
@@ -196,9 +245,10 @@ class App extends Component {
         <h1 className="heading f1 georgia washed-yellow">PATH FINDING VISUALIZER</h1>
         <Navigation 
           handleGenerateMaze={this.handleGenerateMaze}
-          visualizeDijkstra = {this.visualizeDijkstra}
           handleClearMaze = {this.handleClearMaze}
-          handleClearPath = {this.handleClearPath}/>
+          handleClearPath = {this.handleClearPath}
+          visualizeAlgorithm = {this.visualizeAlgorithm}
+          loadChoice = {this.loadChoice}/>
         <div className="App grid">
           {
             grid.map((row,rowIdx) => {
